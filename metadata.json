@@ -1,0 +1,6 @@
+{
+  "name": "Bravi Patrimonial",
+  "description": "Sistema corporativo de abertura e gestão de chamados recorrentes de manutenção, compras e serviços entre áreas e filiais da Bravi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
