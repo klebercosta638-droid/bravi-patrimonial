@@ -1,0 +1,123 @@
+export type Filial =
+  | 'Matriz - São Paulo (SP)'
+  | 'Filial Rio de Janeiro (RJ)'
+  | 'Filial Curitiba (PR)'
+  | 'Filial Belo Horizonte (MG)'
+  | 'Centro de Distribuição - Campinas (SP)'
+  | 'Filial Porto Alegre (RS)'
+  | 'Filial Salvador (BA)';
+
+export type CentroDeCusto =
+  | 'Operações & Logística'
+  | 'TI & Infraestrutura'
+  | 'Facilities & Manutenção Predial'
+  | 'Administrativo & Compras'
+  | 'Recursos Humanos & DP'
+  | 'Comercial & Atendimento';
+
+export type Categoria =
+  | 'Manutenção Predial'
+  | 'Manutenção de Equipamentos'
+  | 'Compra de Suprimentos'
+  | 'Ativos de TI & Hardware'
+  | 'Serviços Terceirizados'
+  | 'Reformas & Adequações';
+
+export type Urgencia = 'Baixa' | 'Média' | 'Alta' | 'Crítica/Emergencial';
+
+export type StatusChamado =
+  | 'Rascunho'
+  | 'Pendente de Aprovação'
+  | 'Aprovado - Em Cotação'
+  | 'Em Execução'
+  | 'Concluído'
+  | 'Rejeitado'
+  | 'Cancelado';
+
+export interface ItemChamado {
+  id: string;
+  codigo: string;
+  descricao: string;
+  unidade: 'UN' | 'M²' | 'KG' | 'HORAS' | 'SERV' | 'CX' | 'PCT';
+  quantidade: number;
+  valorUnitario: number;
+  valorTotal: number;
+}
+
+export type EtapaAssinatura =
+  | 'Solicitante'
+  | 'Gestor da Área'
+  | 'Diretoria Financeira'
+  | 'Controle Patrimonial';
+
+export interface AssinaturaRoteiro {
+  id: string;
+  etapa: EtapaAssinatura;
+  nomeResponsavel: string;
+  cargo: string;
+  status: 'Aprovado' | 'Pendente' | 'Rejeitado' | 'Aguardando';
+  dataAssinatura?: string;
+  observacao?: string;
+  rubricaCodigo?: string;
+}
+
+export interface HistoricoEvento {
+  id: string;
+  dataHora: string;
+  usuario: string;
+  cargo: string;
+  acao: string;
+  comentario?: string;
+  tipo: 'criacao' | 'aprovacao' | 'rejeicao' | 'edicao' | 'status' | 'conclusao';
+}
+
+export interface Chamado {
+  id: string; // Ex: ORC-420
+  titulo: string;
+  filial: Filial;
+  centroDeCusto: CentroDeCusto;
+  categoria: Categoria;
+  urgencia: Urgencia;
+  status: StatusChamado;
+  
+  // Solicitante
+  solicitanteNome: string;
+  solicitanteEmail: string;
+  solicitanteCargo: string;
+  solicitanteRamal: string;
+  dataAbertura: string;
+  previsaoConclusao: string;
+  
+  // Financeiro & Fornecedor
+  fornecedorSugerido: string;
+  cnpjFornecedor?: string;
+  formaPagamento: string;
+  limiteOrcamentario: number;
+  justificativa: string;
+  observacoesInternas?: string;
+  
+  // Itens & Valores
+  itens: ItemChamado[];
+  valorTotalGeral: number;
+  
+  // Roteiro & Auditoria
+  roteiroAssinaturas: AssinaturaRoteiro[];
+  historico: HistoricoEvento[];
+  
+  // Anexos
+  anexos?: {
+    id: string;
+    nome: string;
+    tamanho: string;
+    tipo: string;
+    dataUpload: string;
+  }[];
+}
+
+export interface FiltrosChamado {
+  busca: string;
+  filial: string;
+  status: string;
+  categoria: string;
+  urgencia: string;
+}
