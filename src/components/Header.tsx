@@ -88,10 +88,10 @@ export const Header: React.FC = () => {
             {/* Profile Tag */}
             <div className="hidden xl:flex items-center gap-2 pl-2 border-l border-slate-200">
               <div className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-700">
-                CS
+                KC
               </div>
               <div className="text-left leading-tight">
-                <p className="text-xs font-semibold text-slate-800">Carlos Silveira</p>
+                <p className="text-xs font-semibold text-slate-800">Kleber Costa</p>
                 <p className="text-[10px] text-slate-500">Gestor Patrimonial</p>
               </div>
             </div>
