@@ -52,7 +52,7 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
   // Form State
   const [titulo, setTitulo] = useState('');
   const [filial, setFilial] = useState<Filial>('Matriz Recife - 19.457.137/0001-06');
-  const [centroDeCusto, setCentroDeCusto] = useState<CentroDeCusto>('Facilities & Manutenção Predial');
+  const [centroDeCusto, setCentroDeCusto] = useState<CentroDeCusto>('Patrimonio REC');
   const [categoria, setCategoria] = useState<Categoria>('Manutenção de Equipamentos');
   const [urgencia, setUrgencia] = useState<Urgencia>('Alta');
   const [status, setStatus] = useState<StatusChamado>('Pendente de Aprovação');

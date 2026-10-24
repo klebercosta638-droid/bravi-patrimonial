@@ -4,12 +4,9 @@ export type Filial =
   | 'Filial Paraíba - 19.457.137/0002-89';
 
 export type CentroDeCusto =
-  | 'Operações & Logística'
-  | 'TI & Infraestrutura'
-  | 'Facilities & Manutenção Predial'
-  | 'Administrativo & Compras'
-  | 'Recursos Humanos & DP'
-  | 'Comercial & Atendimento';
+  | 'Patrimonio REC'
+  | 'Patrimonio PB'
+  | 'Patrimonio RN';
 
 export type Categoria =
   | 'Manutenção Predial'
