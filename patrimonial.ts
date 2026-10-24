@@ -1,11 +1,7 @@
 export type Filial =
-  | 'Matriz - São Paulo (SP)'
-  | 'Filial Rio de Janeiro (RJ)'
-  | 'Filial Curitiba (PR)'
-  | 'Filial Belo Horizonte (MG)'
-  | 'Centro de Distribuição - Campinas (SP)'
-  | 'Filial Porto Alegre (RS)'
-  | 'Filial Salvador (BA)';
+  | 'Matriz Recife - 19.457.137/0001-06'
+  | 'Filial Paraíba - 19.457.137/0003-60'
+  | 'Filial Paraíba - 19.457.137/0002-89';
 
 export type CentroDeCusto =
   | 'Operações & Logística'

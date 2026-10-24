@@ -4,7 +4,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-420',
     titulo: 'Revisão e Manutenção do Sistema de Climatização e HVAC',
-    filial: 'Centro de Distribuição - Campinas (SP)',
+    filial: 'Matriz Recife - 19.457.137/0001-06',
     centroDeCusto: 'Facilities & Manutenção Predial',
     categoria: 'Manutenção de Equipamentos',
     urgencia: 'Alta',
@@ -137,7 +137,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-419',
     titulo: 'Aquisição de Nobreaks Industriais para Rack de Servidores',
-    filial: 'Matriz - São Paulo (SP)',
+    filial: 'Filial Paraíba - 19.457.137/0003-60',
     centroDeCusto: 'TI & Infraestrutura',
     categoria: 'Ativos de TI & Hardware',
     urgencia: 'Média',
@@ -233,7 +233,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-418',
     titulo: 'Reparo Hidráulico Emergencial e Impermeabilização da Cozinha',
-    filial: 'Filial Curitiba (PR)',
+    filial: 'Filial Paraíba - 19.457.137/0002-89',
     centroDeCusto: 'Facilities & Manutenção Predial',
     categoria: 'Manutenção Predial',
     urgencia: 'Crítica/Emergencial',
@@ -340,7 +340,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-417',
     titulo: 'Reposição Trimestral de Suprimentos Operacionais e EPIs',
-    filial: 'Filial Belo Horizonte (MG)',
+    filial: 'Matriz Recife - 19.457.137/0001-06',
     centroDeCusto: 'Operações & Logística',
     categoria: 'Compra de Suprimentos',
     urgencia: 'Baixa',
@@ -448,7 +448,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-416',
     titulo: 'Pintura Epóxi e Sinalização de Segurança no Galpão',
-    filial: 'Filial Rio de Janeiro (RJ)',
+    filial: 'Filial Paraíba - 19.457.137/0003-60',
     centroDeCusto: 'Operações & Logística',
     categoria: 'Reformas & Adequações',
     urgencia: 'Média',
@@ -543,7 +543,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-421',
     titulo: 'Contratação de Laudo Estrutural e Termografia de Painéis Elétricos',
-    filial: 'Filial Salvador (BA)',
+    filial: 'Filial Paraíba - 19.457.137/0002-89',
     centroDeCusto: 'Facilities & Manutenção Predial',
     categoria: 'Serviços Terceirizados',
     urgencia: 'Média',
@@ -625,13 +625,9 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
 ];
 
 export const FILIAIS_LIST = [
-  'Matriz - São Paulo (SP)',
-  'Filial Rio de Janeiro (RJ)',
-  'Filial Curitiba (PR)',
-  'Filial Belo Horizonte (MG)',
-  'Centro de Distribuição - Campinas (SP)',
-  'Filial Porto Alegre (RS)',
-  'Filial Salvador (BA)',
+  'Matriz Recife - 19.457.137/0001-06',
+  'Filial Paraíba - 19.457.137/0003-60',
+  'Filial Paraíba - 19.457.137/0002-89',
 ] as const;
 
 export const CENTROS_DE_CUSTO_LIST = [
