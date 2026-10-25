@@ -5,6 +5,7 @@ import { UrgenciaBadge } from './UrgenciaBadge';
 import {
   calcularPrazoAtendimento,
   classificarPrazoAtendimento,
+  correspondeAoPeriodoAbertura,
   formatCurrency,
   formatDate,
 } from '../utils/formatters';
@@ -42,6 +43,10 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
   const filteredChamados = useMemo(() => {
     return chamados
       .filter((c) => {
+        if (!correspondeAoPeriodoAbertura(c.dataAbertura, filtros.ano, filtros.mes)) {
+          return false;
+        }
+
         // Search query
         if (filtros.busca.trim()) {
           const q = filtros.busca.toLowerCase();
@@ -125,6 +130,8 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
       status: 'todos',
       categoria: 'todas',
       urgencia: 'todas',
+      ano: 'todos',
+      mes: 'todos',
     });
   };
 
@@ -134,7 +141,9 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
     filtros.centroDeCusto !== 'todos' ||
     filtros.status !== 'todos' ||
     filtros.categoria !== 'todas' ||
-    filtros.urgencia !== 'todas';
+    filtros.urgencia !== 'todas' ||
+    filtros.ano !== 'todos' ||
+    filtros.mes !== 'todos';
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden">
@@ -198,6 +207,24 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
                   Urgência: {filtros.urgencia}
                   <button onClick={() => setFiltros((p) => ({ ...p, urgencia: 'todas' }))}>
                     <X className="w-3 h-3 hover:text-orange-900" />
+                  </button>
+                </span>
+              )}
+              {filtros.ano !== 'todos' && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-md">
+                  Ano: {filtros.ano}
+                  <button onClick={() => setFiltros((p) => ({ ...p, ano: 'todos' }))}>
+                    <X className="w-3 h-3 hover:text-sky-900" />
+                  </button>
+                </span>
+              )}
+              {filtros.mes !== 'todos' && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-md">
+                  Mês: {new Intl.DateTimeFormat('pt-BR', { month: 'long', timeZone: 'UTC' }).format(
+                    new Date(Date.UTC(2000, Number(filtros.mes) - 1, 1))
+                  )}
+                  <button onClick={() => setFiltros((p) => ({ ...p, mes: 'todos' }))}>
+                    <X className="w-3 h-3 hover:text-sky-900" />
                   </button>
                 </span>
               )}

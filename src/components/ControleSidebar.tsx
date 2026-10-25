@@ -7,6 +7,7 @@ import {
   URGENCIAS_LIST,
 } from '../data/mockData';
 import { formatCurrency } from '../utils/formatters';
+import { correspondeAoPeriodoAbertura } from '../utils/formatters';
 import {
   SlidersHorizontal,
   Search,
@@ -50,8 +51,14 @@ export const ControleSidebar: React.FC = () => {
       status: 'todos',
       categoria: 'todas',
       urgencia: 'todas',
+      ano: 'todos',
+      mes: 'todos',
     });
   };
+
+  const chamadosNoPeriodo = chamados.filter((chamado) =>
+    correspondeAoPeriodoAbertura(chamado.dataAbertura, filtros.ano, filtros.mes)
+  );
 
   const hasActiveFilters =
     filtros.busca !== '' ||
@@ -59,17 +66,19 @@ export const ControleSidebar: React.FC = () => {
     filtros.centroDeCusto !== 'todos' ||
     filtros.status !== 'todos' ||
     filtros.categoria !== 'todas' ||
-    filtros.urgencia !== 'todas';
+    filtros.urgencia !== 'todas' ||
+    filtros.ano !== 'todos' ||
+    filtros.mes !== 'todos';
 
   // Count by status
   const countByStatus = (st: StatusChamado | 'todos' | 'Em Andamento') => {
-    if (st === 'todos') return chamados.length;
+    if (st === 'todos') return chamadosNoPeriodo.length;
     if (st === 'Em Andamento') {
-      return chamados.filter(
+      return chamadosNoPeriodo.filter(
         (c) => c.status === 'Aprovado - Em Cotação' || c.status === 'Em Execução'
       ).length;
     }
-    return chamados.filter((c) => c.status === st).length;
+    return chamadosNoPeriodo.filter((c) => c.status === st).length;
   };
 
   return (
@@ -152,7 +161,7 @@ export const ControleSidebar: React.FC = () => {
               Status do Chamado
             </label>
             <span className="text-[10px] text-slate-400 font-mono">
-              Total: {chamados.length}
+              Total: {chamadosNoPeriodo.length}
             </span>
           </div>
 

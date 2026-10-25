@@ -7,6 +7,7 @@ import { ChamadoDetailView } from './components/ChamadoDetailView';
 import { ChamadoForm } from './components/ChamadoForm';
 import { ControleSidebar } from './components/ControleSidebar';
 import { DashboardInsights } from './components/DashboardInsights';
+import { DashboardPeriodFilters } from './components/DashboardPeriodFilters';
 import { DeleteModal, WorkflowModal } from './components/ActionModals';
 import { ToastContainer } from './components/ToastContainer';
 import { Chamado } from './types/patrimonial';
@@ -86,7 +87,7 @@ const MainApp: React.FC = () => {
         {activeView === 'dashboard' && (
           <div className="space-y-6">
             {/* Dashboard Header Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200/80 gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200/80 gap-3">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                   Painel de Gestão Patrimonial
@@ -95,6 +96,7 @@ const MainApp: React.FC = () => {
                   Acompanhamento de requisições de compras, infraestrutura e manutenção predial entre unidades
                 </p>
               </div>
+              <DashboardPeriodFilters />
             </div>
 
             {/* Dashboard Layout: Main Content (Left) + Control Menu (Right) */}

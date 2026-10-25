@@ -9,6 +9,17 @@ export const formatCurrency = (val: number | undefined | null): string => {
   }).format(val);
 };
 
+export const correspondeAoPeriodoAbertura = (
+  dataAbertura: string,
+  ano: string,
+  mes: string
+): boolean => {
+  if (ano === 'todos' && mes === 'todos') return true;
+  if (!/^\d{4}-\d{2}/.test(dataAbertura)) return false;
+  const [anoAbertura, mesAbertura] = dataAbertura.slice(0, 7).split('-');
+  return (ano === 'todos' || anoAbertura === ano) && (mes === 'todos' || mesAbertura === mes);
+};
+
 const PRAZOS_URGENCIA: Record<Urgencia, number> = {
   'Baixa - Até 7 dias': 7,
   'Média - Até 5 dias': 5,

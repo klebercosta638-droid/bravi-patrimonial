@@ -123,4 +123,6 @@ export interface FiltrosChamado {
   status: string;
   categoria: string;
   urgencia: string;
+  ano: string;
+  mes: string;
 }

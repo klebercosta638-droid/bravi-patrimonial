@@ -4,6 +4,7 @@ import { FILIAIS_LIST } from '../data/mockData';
 import {
   calcularPrazoAtendimento,
   classificarPrazoAtendimento,
+  correspondeAoPeriodoAbertura,
 } from '../utils/formatters';
 import { AlertTriangle, Building2, Clock3 } from 'lucide-react';
 
@@ -21,11 +22,12 @@ export const DashboardInsights: React.FC = () => {
     () =>
       chamados.filter(
         (chamado) =>
+          correspondeAoPeriodoAbertura(chamado.dataAbertura, filtros.ano, filtros.mes) &&
           (filtros.centroDeCusto === 'todos' ||
             chamado.centroDeCusto === filtros.centroDeCusto) &&
           (filtros.categoria === 'todas' || chamado.categoria === filtros.categoria)
       ),
-    [chamados, filtros.centroDeCusto, filtros.categoria]
+    [chamados, filtros.ano, filtros.mes, filtros.centroDeCusto, filtros.categoria]
   );
 
   const dadosFiliais = useMemo(
@@ -109,7 +111,7 @@ export const DashboardInsights: React.FC = () => {
           <div>
             <h2 className="text-sm font-bold text-slate-900">Requisições por Filial e Estado</h2>
             <p className="text-[11px] text-slate-500">
-              Selecione uma célula para filtrar a tabela. Os totais acompanham Centro de Custos e Categoria.
+              Selecione uma célula para filtrar a tabela. Os totais acompanham Ano, Mês, Centro de Custos e Categoria.
             </p>
           </div>
         </div>

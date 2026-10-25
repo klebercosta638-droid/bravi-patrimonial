@@ -7,7 +7,11 @@ import {
   HistoricoEvento,
 } from '../types/patrimonial';
 import { INITIAL_MOCK_CHAMADOS } from '../data/mockData';
-import { calcularPrazoAtendimento, normalizarUrgencia } from '../utils/formatters';
+import {
+  calcularPrazoAtendimento,
+  correspondeAoPeriodoAbertura,
+  normalizarUrgencia,
+} from '../utils/formatters';
 
 const LOCAL_STORAGE_KEY = 'bravi_patrimonial_chamados_v1';
 
@@ -66,6 +70,8 @@ const defaultFiltros: FiltrosChamado = {
   status: 'todos',
   categoria: 'todas',
   urgencia: 'todas',
+  ano: 'todos',
+  mes: 'todos',
 };
 
 const PatrimonialContext = createContext<PatrimonialContextType | undefined>(undefined);
@@ -473,14 +479,17 @@ export const PatrimonialProvider: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const stats = useMemo(() => {
-    const total = chamados.length;
-    const pendentes = chamados.filter((c) => c.status === 'Pendente de Aprovação').length;
-    const emExecucao = chamados.filter((c) => c.status === 'Em Execução' || c.status === 'Aprovado - Em Cotação').length;
-    const concluidos = chamados.filter((c) => c.status === 'Concluído').length;
-    const rejeitados = chamados.filter((c) => c.status === 'Rejeitado' || c.status === 'Cancelado').length;
+    const chamadosNoPeriodo = chamados.filter((chamado) =>
+      correspondeAoPeriodoAbertura(chamado.dataAbertura, filtros.ano, filtros.mes)
+    );
+    const total = chamadosNoPeriodo.length;
+    const pendentes = chamadosNoPeriodo.filter((c) => c.status === 'Pendente de Aprovação').length;
+    const emExecucao = chamadosNoPeriodo.filter((c) => c.status === 'Em Execução' || c.status === 'Aprovado - Em Cotação').length;
+    const concluidos = chamadosNoPeriodo.filter((c) => c.status === 'Concluído').length;
+    const rejeitados = chamadosNoPeriodo.filter((c) => c.status === 'Rejeitado' || c.status === 'Cancelado').length;
 
-    const valorTotalGeral = chamados.reduce((acc, c) => acc + (c.valorTotalGeral || 0), 0);
-    const valorPendente = chamados
+    const valorTotalGeral = chamadosNoPeriodo.reduce((acc, c) => acc + (c.valorTotalGeral || 0), 0);
+    const valorPendente = chamadosNoPeriodo
       .filter((c) => c.status === 'Pendente de Aprovação')
       .reduce((acc, c) => acc + (c.valorTotalGeral || 0), 0);
 
@@ -493,7 +502,7 @@ export const PatrimonialProvider: React.FC<{ children: ReactNode }> = ({ childre
       valorTotalGeral,
       valorPendente,
     };
-  }, [chamados]);
+  }, [chamados, filtros.ano, filtros.mes]);
 
   return (
     <PatrimonialContext.Provider
