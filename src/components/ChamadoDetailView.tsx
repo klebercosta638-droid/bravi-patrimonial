@@ -401,8 +401,19 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
               )}
               <div className="flex items-center gap-1.5 text-xs text-slate-700 font-medium mt-1">
                 <CreditCard className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                <span className="truncate">{selectedChamado.formaPagamento}</span>
+                <span>{selectedChamado.formaPagamento}</span>
               </div>
+              {selectedChamado.formaPagamento === 'Boleto' && selectedChamado.prazoFaturamento && (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Faturamento: {selectedChamado.prazoFaturamento}
+                </p>
+              )}
+              {selectedChamado.formaPagamento === 'Cartão de Crédito' &&
+                selectedChamado.parcelasCartao && (
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Parcelas: {selectedChamado.parcelasCartao}x
+                  </p>
+                )}
             </div>
           </div>
 

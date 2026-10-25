@@ -84,7 +84,9 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
   // Financeiro & Fornecedor
   const [fornecedorSugerido, setFornecedorSugerido] = useState('');
   const [cnpjFornecedor, setCnpjFornecedor] = useState('');
-  const [formaPagamento, setFormaPagamento] = useState('Faturamento 28 dias (Boleto)');
+  const [formaPagamento, setFormaPagamento] = useState('');
+  const [prazoFaturamento, setPrazoFaturamento] = useState('');
+  const [parcelasCartao, setParcelasCartao] = useState('');
   const [limiteOrcamentario, setLimiteOrcamentario] = useState<number>(10000);
   const [justificativa, setJustificativa] = useState('');
   const [observacoesInternas, setObservacoesInternas] = useState('');
@@ -128,7 +130,31 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       setSolicitanteTelefone(selectedChamado.solicitanteTelefone || '');
       setFornecedorSugerido(selectedChamado.fornecedorSugerido || '');
       setCnpjFornecedor(selectedChamado.cnpjFornecedor || '');
-      setFormaPagamento(selectedChamado.formaPagamento || 'Faturamento 28 dias');
+      const formaPagamentoSalva = selectedChamado.formaPagamento || '';
+      if (/boleto|faturamento/i.test(formaPagamentoSalva)) {
+        setFormaPagamento('Boleto');
+        setPrazoFaturamento(
+          selectedChamado.prazoFaturamento ||
+            formaPagamentoSalva.replace(/boleto/i, '').replace(/[()]/g, '').trim()
+        );
+        setParcelasCartao('');
+      } else if (/cart[aã]o/i.test(formaPagamentoSalva)) {
+        setFormaPagamento('Cartão de Crédito');
+        setPrazoFaturamento('');
+        setParcelasCartao(
+          selectedChamado.parcelasCartao ? String(selectedChamado.parcelasCartao) : ''
+        );
+      } else if (/pix/i.test(formaPagamentoSalva)) {
+        setFormaPagamento('Pix');
+        setPrazoFaturamento('');
+        setParcelasCartao('');
+      } else {
+        setFormaPagamento(formaPagamentoSalva);
+        setPrazoFaturamento(selectedChamado.prazoFaturamento || '');
+        setParcelasCartao(
+          selectedChamado.parcelasCartao ? String(selectedChamado.parcelasCartao) : ''
+        );
+      }
       setLimiteOrcamentario(selectedChamado.limiteOrcamentario || 0);
       setJustificativa(selectedChamado.justificativa || '');
       setObservacoesInternas(selectedChamado.observacoesInternas || '');
@@ -218,6 +244,17 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       if (!condutorVeiculo.trim()) errs.condutorVeiculo = 'Informe o condutor do veículo';
     }
 
+    if (!formaPagamento) {
+      errs.formaPagamento = 'Selecione a condição ou forma de pagamento';
+    } else if (formaPagamento === 'Boleto' && !prazoFaturamento.trim()) {
+      errs.prazoFaturamento = 'Informe o prazo para faturamento do boleto';
+    } else if (
+      formaPagamento === 'Cartão de Crédito' &&
+      (!parcelasCartao || Number(parcelasCartao) < 1 || !Number.isInteger(Number(parcelasCartao)))
+    ) {
+      errs.parcelasCartao = 'Informe uma quantidade válida de parcelas';
+    }
+
     if (!justificativa.trim() || justificativa.trim().length < 15) {
       errs.justificativa = 'A justificativa deve ter no mínimo 15 caracteres explicativos';
     }
@@ -270,6 +307,9 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       fornecedorSugerido: fornecedorSugerido.trim() || 'Cotação em aberto / Não definido',
       cnpjFornecedor: cnpjFornecedor.trim(),
       formaPagamento,
+      prazoFaturamento: formaPagamento === 'Boleto' ? prazoFaturamento.trim() : undefined,
+      parcelasCartao:
+        formaPagamento === 'Cartão de Crédito' ? Number(parcelasCartao) : undefined,
       limiteOrcamentario: Number(limiteOrcamentario) || 0,
       justificativa: justificativa.trim(),
       observacoesInternas: observacoesInternas.trim(),
@@ -600,14 +640,70 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Condição / Forma de Pagamento
                 </label>
-                <input
-                  type="text"
+                <select
                   value={formaPagamento}
                   onChange={(e) => setFormaPagamento(e.target.value)}
-                  placeholder="Ex: Faturamento 28 dias / Boleto"
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                />
+                  required
+                  aria-invalid={Boolean(errors.formaPagamento)}
+                  className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                    errors.formaPagamento ? 'border-rose-400' : 'border-slate-300'
+                  }`}
+                >
+                  <option value="">Selecione...</option>
+                  <option value="Boleto">Boleto</option>
+                  <option value="Cartão de Crédito">Cartão de Crédito</option>
+                  <option value="Pix">Pix</option>
+                </select>
+                {errors.formaPagamento && (
+                  <p className="text-xs text-rose-600 mt-1">{errors.formaPagamento}</p>
+                )}
               </div>
+
+              {formaPagamento === 'Boleto' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Quanto tempo para faturar <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={prazoFaturamento}
+                    onChange={(e) => setPrazoFaturamento(e.target.value)}
+                    placeholder="Ex: vencimento em 30 dias"
+                    required
+                    aria-invalid={Boolean(errors.prazoFaturamento)}
+                    className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                      errors.prazoFaturamento ? 'border-rose-400' : 'border-slate-300'
+                    }`}
+                  />
+                  {errors.prazoFaturamento && (
+                    <p className="text-xs text-rose-600 mt-1">{errors.prazoFaturamento}</p>
+                  )}
+                </div>
+              )}
+
+              {formaPagamento === 'Cartão de Crédito' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Quantas parcelas <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={parcelasCartao}
+                    onChange={(e) => setParcelasCartao(e.target.value)}
+                    placeholder="Ex: 3"
+                    required
+                    aria-invalid={Boolean(errors.parcelasCartao)}
+                    className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                      errors.parcelasCartao ? 'border-rose-400' : 'border-slate-300'
+                    }`}
+                  />
+                  {errors.parcelasCartao && (
+                    <p className="text-xs text-rose-600 mt-1">{errors.parcelasCartao}</p>
+                  )}
+                </div>
+              )}
 
               {/* Limite Orçamentário */}
               <div>
