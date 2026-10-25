@@ -29,6 +29,21 @@ export const calcularPrazoAtendimento = (dataAbertura: string, urgencia: Urgenci
   return prazo.toISOString();
 };
 
+export type EstadoPrazoAtendimento = 'vencido' | 'proximo' | 'normal';
+
+export const classificarPrazoAtendimento = (
+  prazoAtendimento: string,
+  agora = Date.now()
+): EstadoPrazoAtendimento => {
+  const prazo = new Date(prazoAtendimento).getTime();
+  if (Number.isNaN(prazo)) {
+    throw new RangeError('Data de prazo inválida para classificação do atendimento.');
+  }
+  if (prazo <= agora) return 'vencido';
+  if (prazo <= agora + 2 * 24 * 60 * 60 * 1000) return 'proximo';
+  return 'normal';
+};
+
 export const normalizarUrgencia = (urgencia: string): Urgencia => {
   const urgenciasLegadas: Record<string, Urgencia> = {
     Baixa: 'Baixa - Até 7 dias',

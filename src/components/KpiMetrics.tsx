@@ -65,9 +65,9 @@ export const KpiMetrics: React.FC = () => {
 
       {/* Em Execução */}
       <div
-        onClick={() => handleCardClick('Em Execução')}
+        onClick={() => handleCardClick('Em Andamento')}
         className={`p-4 bg-white rounded-xl border transition-all cursor-pointer hover:shadow-sm ${
-          filtros.status === 'Em Execução'
+          filtros.status === 'Em Andamento'
             ? 'border-indigo-400 ring-2 ring-indigo-100 bg-indigo-50/20'
             : 'border-slate-200/90'
         }`}

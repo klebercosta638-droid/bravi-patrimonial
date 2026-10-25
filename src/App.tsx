@@ -6,6 +6,7 @@ import { ChamadosTable } from './components/ChamadosTable';
 import { ChamadoDetailView } from './components/ChamadoDetailView';
 import { ChamadoForm } from './components/ChamadoForm';
 import { ControleSidebar } from './components/ControleSidebar';
+import { DashboardInsights } from './components/DashboardInsights';
 import { DeleteModal, WorkflowModal } from './components/ActionModals';
 import { ToastContainer } from './components/ToastContainer';
 import { Chamado } from './types/patrimonial';
@@ -102,6 +103,9 @@ const MainApp: React.FC = () => {
               <div className="flex-1 min-w-0 w-full space-y-6">
                 {/* KPI Metrics */}
                 <KpiMetrics />
+
+                {/* Filial analysis and deadline alerts */}
+                <DashboardInsights />
 
                 {/* Chamados Interactive Table */}
                 <ChamadosTable onDeleteRequest={handleDeleteRequest} />

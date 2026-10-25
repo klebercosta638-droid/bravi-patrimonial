@@ -62,6 +62,7 @@ interface PatrimonialContextType {
 const defaultFiltros: FiltrosChamado = {
   busca: '',
   filial: 'todas',
+  centroDeCusto: 'todos',
   status: 'todos',
   categoria: 'todas',
   urgencia: 'todas',

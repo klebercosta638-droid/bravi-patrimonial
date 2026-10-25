@@ -1,6 +1,12 @@
 import React from 'react';
 import { usePatrimonial } from '../context/PatrimonialContext';
-import { FILIAIS_LIST, STATUS_LIST, CATEGORIAS_LIST, URGENCIAS_LIST } from '../data/mockData';
+import {
+  FILIAIS_LIST,
+  CENTROS_DE_CUSTO_LIST,
+  STATUS_LIST,
+  CATEGORIAS_LIST,
+  URGENCIAS_LIST,
+} from '../data/mockData';
 import { formatCurrency } from '../utils/formatters';
 import {
   SlidersHorizontal,
@@ -41,6 +47,7 @@ export const ControleSidebar: React.FC = () => {
     setFiltros({
       busca: '',
       filial: 'todas',
+      centroDeCusto: 'todos',
       status: 'todos',
       categoria: 'todas',
       urgencia: 'todas',
@@ -50,13 +57,19 @@ export const ControleSidebar: React.FC = () => {
   const hasActiveFilters =
     filtros.busca !== '' ||
     filtros.filial !== 'todas' ||
+    filtros.centroDeCusto !== 'todos' ||
     filtros.status !== 'todos' ||
     filtros.categoria !== 'todas' ||
     filtros.urgencia !== 'todas';
 
   // Count by status
-  const countByStatus = (st: StatusChamado | 'todos') => {
+  const countByStatus = (st: StatusChamado | 'todos' | 'Em Andamento') => {
     if (st === 'todos') return chamados.length;
+    if (st === 'Em Andamento') {
+      return chamados.filter(
+        (c) => c.status === 'Aprovado - Em Cotação' || c.status === 'Em Execução'
+      ).length;
+    }
     return chamados.filter((c) => c.status === st).length;
   };
 
@@ -165,6 +178,23 @@ export const ControleSidebar: React.FC = () => {
                 }`}
               >
                 {countByStatus('todos')}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setFiltros((prev) => ({ ...prev, status: 'Em Andamento' }))}
+              className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center justify-between transition-colors ${
+                filtros.status === 'Em Andamento'
+                  ? 'bg-indigo-600 text-white font-semibold'
+                  : 'text-indigo-900 hover:bg-indigo-50'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <PlayCircle className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                <span>Em Andamento</span>
+              </div>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-indigo-100 text-indigo-800">
+                {countByStatus('Em Andamento')}
               </span>
             </button>
 
@@ -307,6 +337,28 @@ export const ControleSidebar: React.FC = () => {
               {FILIAIS_LIST.map((filial) => (
                 <option key={filial} value={filial}>
                   {filial}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Centro de Custo */}
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-slate-500" />
+              <span>Centro de Custos</span>
+            </label>
+            <select
+              value={filtros.centroDeCusto}
+              onChange={(e) =>
+                setFiltros((prev) => ({ ...prev, centroDeCusto: e.target.value }))
+              }
+              className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            >
+              <option value="todos">Todos os Centros de Custos</option>
+              {CENTROS_DE_CUSTO_LIST.map((centro) => (
+                <option key={centro} value={centro}>
+                  {centro}
                 </option>
               ))}
             </select>

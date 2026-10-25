@@ -2,7 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { usePatrimonial } from '../context/PatrimonialContext';
 import { StatusBadge } from './StatusBadge';
 import { UrgenciaBadge } from './UrgenciaBadge';
-import { calcularPrazoAtendimento, formatCurrency, formatDate } from '../utils/formatters';
+import {
+  calcularPrazoAtendimento,
+  classificarPrazoAtendimento,
+  formatCurrency,
+  formatDate,
+} from '../utils/formatters';
 import {
   Eye,
   Edit3,
@@ -55,8 +60,16 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
           return false;
         }
 
+        if (filtros.centroDeCusto !== 'todos' && c.centroDeCusto !== filtros.centroDeCusto) {
+          return false;
+        }
+
         // Status filter
-        if (filtros.status !== 'todos' && c.status !== filtros.status) {
+        if (
+          filtros.status === 'Em Andamento'
+            ? c.status !== 'Aprovado - Em Cotação' && c.status !== 'Em Execução'
+            : filtros.status !== 'todos' && c.status !== filtros.status
+        ) {
           return false;
         }
 
@@ -108,6 +121,7 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
     setFiltros({
       busca: '',
       filial: 'todas',
+      centroDeCusto: 'todos',
       status: 'todos',
       categoria: 'todas',
       urgencia: 'todas',
@@ -117,6 +131,7 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
   const hasActiveFilters =
     filtros.busca !== '' ||
     filtros.filial !== 'todas' ||
+    filtros.centroDeCusto !== 'todos' ||
     filtros.status !== 'todos' ||
     filtros.categoria !== 'todas' ||
     filtros.urgencia !== 'todas';
@@ -154,11 +169,35 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
                   </button>
                 </span>
               )}
+              {filtros.centroDeCusto !== 'todos' && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-violet-50 text-violet-700 border border-violet-200 px-2 py-0.5 rounded-md">
+                  Centro: {filtros.centroDeCusto}
+                  <button onClick={() => setFiltros((p) => ({ ...p, centroDeCusto: 'todos' }))}>
+                    <X className="w-3 h-3 hover:text-violet-900" />
+                  </button>
+                </span>
+              )}
               {filtros.status !== 'todos' && (
                 <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
                   Status: {filtros.status}
                   <button onClick={() => setFiltros((p) => ({ ...p, status: 'todos' }))}>
                     <X className="w-3 h-3 hover:text-amber-900" />
+                  </button>
+                </span>
+              )}
+              {filtros.categoria !== 'todas' && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-0.5 rounded-md">
+                  Categoria: {filtros.categoria}
+                  <button onClick={() => setFiltros((p) => ({ ...p, categoria: 'todas' }))}>
+                    <X className="w-3 h-3 hover:text-cyan-900" />
+                  </button>
+                </span>
+              )}
+              {filtros.urgencia !== 'todas' && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-orange-50 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-md">
+                  Urgência: {filtros.urgencia}
+                  <button onClick={() => setFiltros((p) => ({ ...p, urgencia: 'todas' }))}>
+                    <X className="w-3 h-3 hover:text-orange-900" />
                   </button>
                 </span>
               )}
@@ -273,6 +312,10 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
             ) : (
               filteredChamados.map((chamado) => {
                 const isOrc420 = chamado.id === 'ORC-420';
+                const prazoLimite = calcularPrazoAtendimento(chamado.dataAbertura, chamado.urgencia);
+                const estadoPrazo = ['Concluído', 'Rejeitado', 'Cancelado', 'Rascunho'].includes(chamado.status)
+                  ? 'normal'
+                  : classificarPrazoAtendimento(prazoLimite);
                 return (
                   <tr
                     key={chamado.id}
@@ -316,7 +359,18 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
                         </div>
                         <div>
                           <span className="font-medium text-slate-600">Prazo limite:</span>{' '}
-                          {formatDate(calcularPrazoAtendimento(chamado.dataAbertura, chamado.urgencia))}
+                          {formatDate(prazoLimite)}
+                          {estadoPrazo !== 'normal' && (
+                            <span
+                              className={`ml-1 inline-flex rounded px-1 py-0.5 font-semibold ${
+                                estadoPrazo === 'vencido'
+                                  ? 'bg-rose-100 text-rose-700'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}
+                            >
+                              {estadoPrazo === 'vencido' ? 'VENCIDO' : 'PRÓXIMO'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </td>

@@ -121,6 +121,7 @@ export interface Chamado {
 export interface FiltrosChamado {
   busca: string;
   filial: string;
+  centroDeCusto: string;
   status: string;
   categoria: string;
   urgencia: string;
