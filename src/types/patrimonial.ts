@@ -92,11 +92,9 @@ export interface Chamado {
   
   // Financeiro & Fornecedor
   fornecedorSugerido: string;
-  cnpjFornecedor?: string;
   formaPagamento: string;
   prazoFaturamento?: string;
   parcelasCartao?: number;
-  limiteOrcamentario: number;
   justificativa: string;
   observacoesInternas?: string;
   

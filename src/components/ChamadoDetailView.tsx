@@ -55,13 +55,6 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
     window.print();
   };
 
-  const isWithinBudget =
-    selectedChamado.limiteOrcamentario > 0
-      ? selectedChamado.valorTotalGeral <= selectedChamado.limiteOrcamentario
-      : true;
-
-  const budgetDelta = selectedChamado.limiteOrcamentario - selectedChamado.valorTotalGeral;
-
   return (
     <div className="space-y-6 pb-12">
       {/* Action Header (Hidden in Print) */}
@@ -354,38 +347,6 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
               </p>
             </div>
 
-            {/* Card Limite Orçamentário */}
-            <div
-              className={`p-4 rounded-xl border ${
-                isWithinBudget
-                  ? 'bg-emerald-50/70 border-emerald-300 text-emerald-950'
-                  : 'bg-rose-50/70 border-rose-300 text-rose-950'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  Limite Orçamentário Aprovado
-                </span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    isWithinBudget
-                      ? 'bg-emerald-200 text-emerald-900'
-                      : 'bg-rose-200 text-rose-900'
-                  }`}
-                >
-                  {isWithinBudget ? 'Dentro do Limite' : 'Excedeu Limite'}
-                </span>
-              </div>
-              <div className="text-xl font-mono font-bold mt-1">
-                {formatCurrency(selectedChamado.limiteOrcamentario)}
-              </div>
-              <p className="text-[11px] mt-1 opacity-90">
-                {isWithinBudget
-                  ? `Margem residual: +${formatCurrency(budgetDelta)}`
-                  : `Déficit orçamentário: ${formatCurrency(budgetDelta)}`}
-              </p>
-            </div>
-
             {/* Card Fornecedor & Forma Pagamento */}
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-slate-900">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
@@ -394,11 +355,6 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
               <div className="font-bold text-xs sm:text-sm text-slate-900 mt-1 truncate">
                 {selectedChamado.fornecedorSugerido || 'A Definir / Cotação Aberta'}
               </div>
-              {selectedChamado.cnpjFornecedor && (
-                <p className="text-[11px] text-slate-500 font-mono">
-                  CNPJ: {selectedChamado.cnpjFornecedor}
-                </p>
-              )}
               <div className="flex items-center gap-1.5 text-xs text-slate-700 font-medium mt-1">
                 <CreditCard className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 <span>{selectedChamado.formaPagamento}</span>

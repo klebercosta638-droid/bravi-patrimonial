@@ -16,9 +16,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-18T09:30:00Z',
     previsaoConclusao: '2026-10-21T09:30:00Z',
     fornecedorSugerido: 'ClimaTech Engenharia Térmica Ltda',
-    cnpjFornecedor: '14.892.311/0001-45',
     formaPagamento: 'Faturamento 28 / 56 dias (Boleto)',
-    limiteOrcamentario: 18000,
     justificativa:
       'Necessidade urgente de higienização dos dutos principais e troca dos filtros HEPA nos blocos B e C do Centro de Distribuição. O aumento da temperatura interna tem colocado em risco a integridade dos lotes farmacêuticos e de cosméticos armazenados, com fiscalização da Anvisa prevista para o próximo mês.',
     observacoesInternas: 'Cotações anexadas de 3 fornecedores homologados. ClimaTech apresentou o melhor custo-benefício e menor prazo de execução.',
@@ -149,9 +147,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-14T14:10:00Z',
     previsaoConclusao: '2026-10-19T14:10:00Z',
     fornecedorSugerido: 'PowerTech Soluções Elétricas',
-    cnpjFornecedor: '08.123.998/0002-19',
     formaPagamento: 'PIX / Transferência Bancária na Entrega',
-    limiteOrcamentario: 12500,
     justificativa:
       'Substituição de baterias estufadas e upgrade do módulo de alimentação ininterrupta do Data Center Central para evitar quedas no ERP.',
     itens: [
@@ -245,9 +241,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-12T08:00:00Z',
     previsaoConclusao: '2026-10-13T08:00:00Z',
     fornecedorSugerido: 'HidroFix Serviços Prediais Curitiba',
-    cnpjFornecedor: '22.441.776/0001-90',
     formaPagamento: 'Faturamento 15 dias',
-    limiteOrcamentario: 6500,
     justificativa:
       'Vazamento na coluna principal de esgoto pluvial atingiu o refeitório e causou infiltração na sala técnica inferior. Ação emergencial autorizada pela gerência.',
     itens: [
@@ -352,9 +346,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-02T10:00:00Z',
     previsaoConclusao: '2026-10-09T10:00:00Z',
     fornecedorSugerido: 'MegaSafe Equipamentos de Segurança',
-    cnpjFornecedor: '11.332.990/0001-88',
     formaPagamento: 'Boleto 30 dias',
-    limiteOrcamentario: 5000,
     justificativa:
       'Abastecimento rotineiro de estoque para atendimento das normas regulamentadoras NR-06 e suprimento da equipe operacional.',
     itens: [
@@ -460,9 +452,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-08T15:30:00Z',
     previsaoConclusao: '2026-10-13T15:30:00Z',
     fornecedorSugerido: 'Pinturas Carioca Express',
-    cnpjFornecedor: '30.119.452/0001-01',
     formaPagamento: 'Boleto 14 dias',
-    limiteOrcamentario: 8000,
     justificativa:
       'Renovação das faixas amarelas de circulação de empilhadeiras e demarcação de hidrantes.',
     itens: [
@@ -555,9 +545,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
     dataAbertura: '2026-10-21T11:00:00Z',
     previsaoConclusao: '2026-10-26T11:00:00Z',
     fornecedorSugerido: 'Engenharia & Inspeção Nordeste',
-    cnpjFornecedor: '33.882.110/0001-52',
     formaPagamento: 'Faturamento 28 dias',
-    limiteOrcamentario: 7500,
     justificativa:
       'Elaboração de laudo de conformidade com a NR-10 e inspeção termográfica periódica dos quadros elétricos de comando do galpão de triagem.',
     itens: [

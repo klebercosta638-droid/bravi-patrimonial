@@ -75,11 +75,18 @@ export const PatrimonialProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
-        const chamadosSalvos = JSON.parse(saved) as Chamado[];
+        const chamadosSalvos = JSON.parse(saved) as Array<
+          Chamado & { cnpjFornecedor?: string; limiteOrcamentario?: number }
+        >;
         return chamadosSalvos.map((chamado) => {
           const urgencia = normalizarUrgencia(chamado.urgencia);
+          const {
+            cnpjFornecedor: _cnpjFornecedor,
+            limiteOrcamentario: _limiteOrcamentario,
+            ...dadosChamado
+          } = chamado;
           return {
-            ...chamado,
+            ...dadosChamado,
             urgencia,
             previsaoConclusao: calcularPrazoAtendimento(chamado.dataAbertura, urgencia),
           };

@@ -83,11 +83,9 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
 
   // Financeiro & Fornecedor
   const [fornecedorSugerido, setFornecedorSugerido] = useState('');
-  const [cnpjFornecedor, setCnpjFornecedor] = useState('');
   const [formaPagamento, setFormaPagamento] = useState('');
   const [prazoFaturamento, setPrazoFaturamento] = useState('');
   const [parcelasCartao, setParcelasCartao] = useState('');
-  const [limiteOrcamentario, setLimiteOrcamentario] = useState<number>(10000);
   const [justificativa, setJustificativa] = useState('');
   const [observacoesInternas, setObservacoesInternas] = useState('');
 
@@ -129,7 +127,6 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       setSolicitanteRamal(selectedChamado.solicitanteRamal);
       setSolicitanteTelefone(selectedChamado.solicitanteTelefone || '');
       setFornecedorSugerido(selectedChamado.fornecedorSugerido || '');
-      setCnpjFornecedor(selectedChamado.cnpjFornecedor || '');
       const formaPagamentoSalva = selectedChamado.formaPagamento || '';
       if (/boleto|faturamento/i.test(formaPagamentoSalva)) {
         setFormaPagamento('Boleto');
@@ -155,7 +152,6 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
           selectedChamado.parcelasCartao ? String(selectedChamado.parcelasCartao) : ''
         );
       }
-      setLimiteOrcamentario(selectedChamado.limiteOrcamentario || 0);
       setJustificativa(selectedChamado.justificativa || '');
       setObservacoesInternas(selectedChamado.observacoesInternas || '');
 
@@ -238,6 +234,10 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       errs.solicitanteNome = 'Informe o nome do solicitante';
     }
 
+    if (!fornecedorSugerido.trim()) {
+      errs.fornecedorSugerido = 'Informe o fornecedor homologado ou sugerido';
+    }
+
     if (categoria === 'Serviços Logísticos / Veículos') {
       if (!placaVeiculo.trim()) errs.placaVeiculo = 'Informe a placa do veículo';
       if (!tipoVeiculo.trim()) errs.tipoVeiculo = 'Informe o tipo do veículo';
@@ -304,13 +304,11 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       solicitanteTelefone: solicitanteTelefone.trim(),
       dataAbertura,
       previsaoConclusao: calcularPrazoAtendimento(dataAbertura, urgencia),
-      fornecedorSugerido: fornecedorSugerido.trim() || 'Cotação em aberto / Não definido',
-      cnpjFornecedor: cnpjFornecedor.trim(),
+      fornecedorSugerido: fornecedorSugerido.trim(),
       formaPagamento,
       prazoFaturamento: formaPagamento === 'Boleto' ? prazoFaturamento.trim() : undefined,
       parcelasCartao:
         formaPagamento === 'Cartão de Crédito' ? Number(parcelasCartao) : undefined,
-      limiteOrcamentario: Number(limiteOrcamentario) || 0,
       justificativa: justificativa.trim(),
       observacoesInternas: observacoesInternas.trim(),
       itens: itens.map((it) => ({
@@ -624,21 +622,28 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
               {/* Fornecedor */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Fornecedor Homologado / Sugerido
+                  Fornecedor Homologado / Sugerido <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={fornecedorSugerido}
                   onChange={(e) => setFornecedorSugerido(e.target.value)}
                   placeholder="Ex: ClimaTech Engenharia Térmica"
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  required
+                  aria-invalid={Boolean(errors.fornecedorSugerido)}
+                  className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                    errors.fornecedorSugerido ? 'border-rose-400' : 'border-slate-300'
+                  }`}
                 />
+                {errors.fornecedorSugerido && (
+                  <p className="text-xs text-rose-600 mt-1">{errors.fornecedorSugerido}</p>
+                )}
               </div>
 
               {/* Forma Pagamento */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Condição / Forma de Pagamento
+                  Condição / Forma de Pagamento <span className="text-rose-500">*</span>
                 </label>
                 <select
                   value={formaPagamento}
@@ -650,8 +655,8 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
                   }`}
                 >
                   <option value="">Selecione...</option>
-                  <option value="Boleto">Boleto</option>
-                  <option value="Cartão de Crédito">Cartão de Crédito</option>
+                  <option value="Boleto">Boleto com prazo de faturamento</option>
+                  <option value="Cartão de Crédito">Cartão de crédito com parcelas</option>
                   <option value="Pix">Pix</option>
                 </select>
                 {errors.formaPagamento && (
@@ -705,25 +710,6 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
                 </div>
               )}
 
-              {/* Limite Orçamentário */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Limite Orçamentário Aprovado (R$)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
-                    R$
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="50"
-                    value={limiteOrcamentario}
-                    onChange={(e) => setLimiteOrcamentario(Number(e.target.value))}
-                    className="w-full pl-9 pr-3.5 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 font-mono"
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Justificativa */}
@@ -882,40 +868,13 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
               </table>
             </div>
 
-            {/* Totalizador Financeiro e Análise Orçamentária */}
-            <div className="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-              <div className="flex items-center gap-3">
-                <div className="text-left">
-                  <span className="text-[11px] text-slate-400 uppercase tracking-wider block">
-                    Total Calculado dos Itens:
-                  </span>
-                  <span className="text-xl sm:text-2xl font-mono font-black text-sky-400">
-                    {formatCurrency(valorTotalCalculado)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Budget check comparison */}
-              <div className="text-right text-xs">
-                <div className="flex items-center gap-2 justify-end">
-                  <span className="text-slate-300">Limite Estipulado:</span>
-                  <span className="font-mono font-bold">{formatCurrency(limiteOrcamentario)}</span>
-                </div>
-                {limiteOrcamentario > 0 && (
-                  <div className="mt-1">
-                    {valorTotalCalculado <= limiteOrcamentario ? (
-                      <span className="text-emerald-400 font-semibold flex items-center gap-1 justify-end">
-                        • Dentro do teto orçamentário ({formatCurrency(limiteOrcamentario - valorTotalCalculado)} restante)
-                      </span>
-                    ) : (
-                      <span className="text-rose-400 font-semibold flex items-center gap-1 justify-end">
-                        <AlertCircle className="w-3.5 h-3.5" />
-                        • Excede limite em {formatCurrency(valorTotalCalculado - limiteOrcamentario)}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div className="p-4 bg-slate-900 text-white rounded-xl shadow-xs">
+              <span className="text-[11px] text-slate-400 uppercase tracking-wider block">
+                Total Calculado dos Itens:
+              </span>
+              <span className="text-xl sm:text-2xl font-mono font-black text-sky-400">
+                {formatCurrency(valorTotalCalculado)}
+              </span>
             </div>
           </div>
         </div>
