@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { usePatrimonial } from '../context/PatrimonialContext';
 import { StatusBadge } from './StatusBadge';
 import { UrgenciaBadge } from './UrgenciaBadge';
-import { formatCurrency, formatDate } from '../utils/formatters';
+import { calcularPrazoAtendimento, formatCurrency, formatDate } from '../utils/formatters';
 import {
   Eye,
   Edit3,
@@ -308,8 +308,16 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
                       </div>
                       <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                         <span className="font-medium text-slate-700">{chamado.solicitanteNome}</span>
-                        <span>•</span>
-                        <span>{formatDate(chamado.dataAbertura)}</span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-1 space-y-0.5">
+                        <div>
+                          <span className="font-medium text-slate-600">Abertura:</span>{' '}
+                          {formatDate(chamado.dataAbertura)}
+                        </div>
+                        <div>
+                          <span className="font-medium text-slate-600">Prazo limite:</span>{' '}
+                          {formatDate(calcularPrazoAtendimento(chamado.dataAbertura, chamado.urgencia))}
+                        </div>
                       </div>
                     </td>
 
