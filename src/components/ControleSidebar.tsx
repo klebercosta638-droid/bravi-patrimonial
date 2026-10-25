@@ -3,7 +3,6 @@ import { usePatrimonial } from '../context/PatrimonialContext';
 import {
   FILIAIS_LIST,
   CENTROS_DE_CUSTO_LIST,
-  STATUS_LIST,
   CATEGORIAS_LIST,
   URGENCIAS_LIST,
 } from '../data/mockData';

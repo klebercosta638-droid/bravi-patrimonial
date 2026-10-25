@@ -28,6 +28,32 @@ export const DashboardInsights: React.FC = () => {
     [chamados, filtros.centroDeCusto, filtros.categoria]
   );
 
+  const dadosFiliais = useMemo(
+    () =>
+      FILIAIS_LIST.map((filial) => {
+        const destaFilial = chamadosBase.filter((chamado) => chamado.filial === filial);
+        return {
+          filial,
+          pendentes: destaFilial.filter((chamado) => chamado.status === 'Pendente de Aprovação')
+            .length,
+          emAndamento: destaFilial.filter((chamado) =>
+            STATUS_EM_ANDAMENTO.includes(chamado.status)
+          ).length,
+          concluidos: destaFilial.filter((chamado) => chamado.status === 'Concluído').length,
+        };
+      }),
+    [chamadosBase]
+  );
+
+  const maioresVolumes = dadosFiliais.reduce(
+    (maiores, filial) => ({
+      pendentes: Math.max(maiores.pendentes, filial.pendentes),
+      emAndamento: Math.max(maiores.emAndamento, filial.emAndamento),
+      concluidos: Math.max(maiores.concluidos, filial.concluidos),
+    }),
+    { pendentes: 0, emAndamento: 0, concluidos: 0 }
+  );
+
   const chamadosParaAlertas = useMemo(
     () =>
       chamadosBase.filter((chamado) => {
@@ -98,19 +124,7 @@ export const DashboardInsights: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {FILIAIS_LIST.map((filial) => {
-                const destaFilial = chamadosBase.filter((chamado) => chamado.filial === filial);
-                const pendentes = destaFilial.filter(
-                  (chamado) => chamado.status === 'Pendente de Aprovação'
-                ).length;
-                const emAndamento = destaFilial.filter((chamado) =>
-                  STATUS_EM_ANDAMENTO.includes(chamado.status)
-                ).length;
-                const concluidos = destaFilial.filter(
-                  (chamado) => chamado.status === 'Concluído'
-                ).length;
-
-                return (
+              {dadosFiliais.map(({ filial, pendentes, emAndamento, concluidos }) => (
                   <tr key={filial} className="hover:bg-slate-50">
                     <th className="px-4 py-2.5 text-left font-semibold text-slate-700">
                       {filial}
@@ -123,7 +137,11 @@ export const DashboardInsights: React.FC = () => {
                         className={`min-w-10 rounded-md px-2 py-1 font-bold ${
                           filtros.filial === filial && filtros.status === 'Pendente de Aprovação'
                             ? 'bg-amber-600 text-white'
-                            : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
+                            : `bg-amber-50 text-amber-800 hover:bg-amber-100 ${
+                                pendentes > 0 && pendentes === maioresVolumes.pendentes
+                                  ? 'ring-2 ring-amber-300 font-black'
+                                  : ''
+                              }`
                         }`}
                       >
                         {pendentes}
@@ -137,7 +155,11 @@ export const DashboardInsights: React.FC = () => {
                         className={`min-w-10 rounded-md px-2 py-1 font-bold ${
                           filtros.filial === filial && filtros.status === 'Em Andamento'
                             ? 'bg-indigo-600 text-white'
-                            : 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100'
+                            : `bg-indigo-50 text-indigo-800 hover:bg-indigo-100 ${
+                                emAndamento > 0 && emAndamento === maioresVolumes.emAndamento
+                                  ? 'ring-2 ring-indigo-300 font-black'
+                                  : ''
+                              }`
                         }`}
                       >
                         {emAndamento}
@@ -151,16 +173,33 @@ export const DashboardInsights: React.FC = () => {
                         className={`min-w-10 rounded-md px-2 py-1 font-bold ${
                           filtros.filial === filial && filtros.status === 'Concluído'
                             ? 'bg-emerald-600 text-white'
-                            : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                            : `bg-emerald-50 text-emerald-800 hover:bg-emerald-100 ${
+                                concluidos > 0 && concluidos === maioresVolumes.concluidos
+                                  ? 'ring-2 ring-emerald-300 font-black'
+                                  : ''
+                              }`
                         }`}
                       >
                         {concluidos}
                       </button>
                     </td>
                   </tr>
-                );
-              })}
+              ))}
             </tbody>
+            <tfoot className="border-t border-slate-200 bg-slate-50 text-xs font-bold text-slate-700">
+              <tr>
+                <th className="px-4 py-2.5 text-left">Total</th>
+                <td className="px-3 py-2.5 text-center">
+                  {dadosFiliais.reduce((total, filial) => total + filial.pendentes, 0)}
+                </td>
+                <td className="px-3 py-2.5 text-center">
+                  {dadosFiliais.reduce((total, filial) => total + filial.emAndamento, 0)}
+                </td>
+                <td className="px-3 py-2.5 text-center">
+                  {dadosFiliais.reduce((total, filial) => total + filial.concluidos, 0)}
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </section>
