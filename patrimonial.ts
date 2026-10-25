@@ -86,6 +86,7 @@ export interface Chamado {
   solicitanteEmail: string;
   solicitanteCargo: string;
   solicitanteRamal: string;
+  solicitanteTelefone?: string;
   dataAbertura: string;
   previsaoConclusao: string;
   

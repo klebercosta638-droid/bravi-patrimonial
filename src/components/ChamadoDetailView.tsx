@@ -268,6 +268,11 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
                 <span className="text-[11px] text-slate-500 block">
                   {selectedChamado.solicitanteCargo} • {selectedChamado.solicitanteRamal}
                 </span>
+                {selectedChamado.solicitanteTelefone && (
+                  <span className="text-[11px] text-slate-500 block">
+                    Telefone: {selectedChamado.solicitanteTelefone}
+                  </span>
+                )}
               </div>
             </div>
 
