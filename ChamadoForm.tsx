@@ -882,40 +882,13 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
               </table>
             </div>
 
-            {/* Totalizador Financeiro e Análise Orçamentária */}
-            <div className="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-              <div className="flex items-center gap-3">
-                <div className="text-left">
-                  <span className="text-[11px] text-slate-400 uppercase tracking-wider block">
-                    Total Calculado dos Itens:
-                  </span>
-                  <span className="text-xl sm:text-2xl font-mono font-black text-sky-400">
-                    {formatCurrency(valorTotalCalculado)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Budget check comparison */}
-              <div className="text-right text-xs">
-                <div className="flex items-center gap-2 justify-end">
-                  <span className="text-slate-300">Limite Estipulado:</span>
-                  <span className="font-mono font-bold">{formatCurrency(limiteOrcamentario)}</span>
-                </div>
-                {limiteOrcamentario > 0 && (
-                  <div className="mt-1">
-                    {valorTotalCalculado <= limiteOrcamentario ? (
-                      <span className="text-emerald-400 font-semibold flex items-center gap-1 justify-end">
-                        • Dentro do teto orçamentário ({formatCurrency(limiteOrcamentario - valorTotalCalculado)} restante)
-                      </span>
-                    ) : (
-                      <span className="text-rose-400 font-semibold flex items-center gap-1 justify-end">
-                        <AlertCircle className="w-3.5 h-3.5" />
-                        • Excede limite em {formatCurrency(valorTotalCalculado - limiteOrcamentario)}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div className="p-4 bg-slate-900 text-white rounded-xl shadow-xs">
+              <span className="text-[11px] text-slate-400 uppercase tracking-wider block">
+                Total Calculado dos Itens:
+              </span>
+              <span className="text-xl sm:text-2xl font-mono font-black text-sky-400">
+                {formatCurrency(valorTotalCalculado)}
+              </span>
             </div>
           </div>
         </div>
