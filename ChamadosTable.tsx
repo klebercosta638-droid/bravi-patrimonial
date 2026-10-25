@@ -82,10 +82,10 @@ export const ChamadosTable: React.FC<ChamadosTableProps> = ({ onDeleteRequest })
           diff = a.valorTotalGeral - b.valorTotalGeral;
         } else if (sortField === 'urgencia') {
           const weights: Record<string, number> = {
-            'Crítica/Emergencial': 4,
-            Alta: 3,
-            Média: 2,
-            Baixa: 1,
+            'Crítica/Emergencial - Até 1 dia': 4,
+            'Alta - Até 3 dias': 3,
+            'Média - Até 5 dias': 2,
+            'Baixa - Até 7 dias': 1,
           };
           diff = (weights[a.urgencia] || 0) - (weights[b.urgencia] || 0);
         } else {

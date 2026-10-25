@@ -16,7 +16,12 @@ import {
   URGENCIAS_LIST,
   STATUS_LIST,
 } from '../data/mockData';
-import { formatCurrency } from '../utils/formatters';
+import {
+  calcularPrazoAtendimento,
+  formatCurrency,
+  formatDate,
+  getPrazoAtendimentoDias,
+} from '../utils/formatters';
 import {
   Save,
   ArrowLeft,
@@ -54,15 +59,18 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
   const [filial, setFilial] = useState<Filial>('Matriz Recife - 19.457.137/0001-06');
   const [centroDeCusto, setCentroDeCusto] = useState<CentroDeCusto>('Patrimonio REC');
   const [categoria, setCategoria] = useState<Categoria>('Manutenção de Equipamentos');
-  const [urgencia, setUrgencia] = useState<Urgencia>('Alta');
+  const [urgencia, setUrgencia] = useState<Urgencia>('Alta - Até 3 dias');
   const [status, setStatus] = useState<StatusChamado>('Pendente de Aprovação');
+  const [dataAberturaFormulario] = useState(() => new Date().toISOString());
+  const dataAbertura = isEditing && selectedChamado
+    ? selectedChamado.dataAbertura
+    : dataAberturaFormulario;
 
   // Solicitante
   const [solicitanteNome, setSolicitanteNome] = useState('Carlos Silveira');
   const [solicitanteEmail, setSolicitanteEmail] = useState('carlos.silveira@bravi.com.br');
   const [solicitanteCargo, setSolicitanteCargo] = useState('Gestor Patrimonial & Facilities');
   const [solicitanteRamal, setSolicitanteRamal] = useState('R-4010');
-  const [previsaoConclusao, setPrevisaoConclusao] = useState('');
 
   // Financeiro & Fornecedor
   const [fornecedorSugerido, setFornecedorSugerido] = useState('');
@@ -102,12 +110,6 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       setSolicitanteEmail(selectedChamado.solicitanteEmail);
       setSolicitanteCargo(selectedChamado.solicitanteCargo);
       setSolicitanteRamal(selectedChamado.solicitanteRamal);
-      setPrevisaoConclusao(
-        selectedChamado.previsaoConclusao
-          ? selectedChamado.previsaoConclusao.split('T')[0]
-          : ''
-      );
-
       setFornecedorSugerido(selectedChamado.fornecedorSugerido || '');
       setCnpjFornecedor(selectedChamado.cnpjFornecedor || '');
       setFormaPagamento(selectedChamado.formaPagamento || 'Faturamento 28 dias');
@@ -130,11 +132,6 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
               },
             ]
       );
-    } else if (!isEditing) {
-      // Set default target completion date in 10 days
-      const d = new Date();
-      d.setDate(d.getDate() + 10);
-      setPrevisaoConclusao(d.toISOString().split('T')[0]);
     }
   }, [isEditing, selectedChamado]);
 
@@ -239,10 +236,8 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       solicitanteEmail: solicitanteEmail.trim(),
       solicitanteCargo: solicitanteCargo.trim(),
       solicitanteRamal: solicitanteRamal.trim(),
-      dataAbertura: isEditing && selectedChamado ? selectedChamado.dataAbertura : new Date().toISOString(),
-      previsaoConclusao: previsaoConclusao
-        ? new Date(previsaoConclusao).toISOString()
-        : new Date(Date.now() + 7 * 86400000).toISOString(),
+      dataAbertura,
+      previsaoConclusao: calcularPrazoAtendimento(dataAbertura, urgencia),
       fornecedorSugerido: fornecedorSugerido.trim() || 'Cotação em aberto / Não definido',
       cnpjFornecedor: cnpjFornecedor.trim(),
       formaPagamento,
@@ -437,14 +432,12 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Prazo Desejado (Previsão)
+                  Prazo Limite de Atendimento
                 </label>
-                <input
-                  type="date"
-                  value={previsaoConclusao}
-                  onChange={(e) => setPrevisaoConclusao(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                />
+                <p className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-700">
+                  {formatDate(calcularPrazoAtendimento(dataAbertura, urgencia))}
+                  {' '}(abertura + {getPrazoAtendimentoDias(urgencia)} dias)
+                </p>
               </div>
             </div>
           </div>

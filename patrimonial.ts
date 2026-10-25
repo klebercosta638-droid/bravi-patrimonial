@@ -16,7 +16,11 @@ export type Categoria =
   | 'Serviços Terceirizados'
   | 'Reformas & Adequações';
 
-export type Urgencia = 'Baixa' | 'Média' | 'Alta' | 'Crítica/Emergencial';
+export type Urgencia =
+  | 'Baixa - Até 7 dias'
+  | 'Média - Até 5 dias'
+  | 'Alta - Até 3 dias'
+  | 'Crítica/Emergencial - Até 1 dia';
 
 export type StatusChamado =
   | 'Rascunho'

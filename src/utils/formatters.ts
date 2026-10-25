@@ -1,3 +1,5 @@
+import { Urgencia } from '../types/patrimonial';
+
 export const formatCurrency = (val: number | undefined | null): string => {
   if (val === undefined || val === null || isNaN(val)) return 'R$ 0,00';
   return new Intl.NumberFormat('pt-BR', {
@@ -5,6 +7,46 @@ export const formatCurrency = (val: number | undefined | null): string => {
     currency: 'BRL',
     minimumFractionDigits: 2,
   }).format(val);
+};
+
+const PRAZOS_URGENCIA: Record<Urgencia, number> = {
+  'Baixa - Até 7 dias': 7,
+  'Média - Até 5 dias': 5,
+  'Alta - Até 3 dias': 3,
+  'Crítica/Emergencial - Até 1 dia': 1,
+};
+
+export const getPrazoAtendimentoDias = (urgencia: Urgencia): number =>
+  PRAZOS_URGENCIA[urgencia];
+
+export const calcularPrazoAtendimento = (dataAbertura: string, urgencia: Urgencia): string => {
+  const prazo = new Date(dataAbertura);
+  if (Number.isNaN(prazo.getTime())) {
+    throw new RangeError('Data de abertura inválida para calcular o prazo de atendimento.');
+  }
+
+  prazo.setDate(prazo.getDate() + getPrazoAtendimentoDias(urgencia));
+  return prazo.toISOString();
+};
+
+export const normalizarUrgencia = (urgencia: string): Urgencia => {
+  const urgenciasLegadas: Record<string, Urgencia> = {
+    Baixa: 'Baixa - Até 7 dias',
+    Média: 'Média - Até 5 dias',
+    Alta: 'Alta - Até 3 dias',
+    'Crítica/Emergencial': 'Crítica/Emergencial - Até 1 dia',
+  };
+  if (
+    urgencia === 'Baixa - Até 7 dias' ||
+    urgencia === 'Média - Até 5 dias' ||
+    urgencia === 'Alta - Até 3 dias' ||
+    urgencia === 'Crítica/Emergencial - Até 1 dia'
+  ) {
+    return urgencia;
+  }
+  const normalizada = urgenciasLegadas[urgencia];
+  if (!normalizada) throw new RangeError(`Nível de urgência inválido: ${urgencia}`);
+  return normalizada;
 };
 
 export const formatDate = (dateString?: string): string => {

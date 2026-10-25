@@ -274,7 +274,7 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
             {/* Prazos & Urgência */}
             <div>
               <span className="text-[11px] font-semibold text-slate-500 block uppercase">
-                Urgência & Previsão
+                Urgência & Prazo Limite
               </span>
               <div className="flex items-center gap-2 mt-1">
                 <UrgenciaBadge urgencia={selectedChamado.urgencia} size="sm" />

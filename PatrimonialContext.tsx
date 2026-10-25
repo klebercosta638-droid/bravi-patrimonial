@@ -7,6 +7,7 @@ import {
   HistoricoEvento,
 } from '../types/patrimonial';
 import { INITIAL_MOCK_CHAMADOS } from '../data/mockData';
+import { calcularPrazoAtendimento, normalizarUrgencia } from '../utils/formatters';
 
 const LOCAL_STORAGE_KEY = 'bravi_patrimonial_chamados_v1';
 
@@ -73,7 +74,15 @@ export const PatrimonialProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const chamadosSalvos = JSON.parse(saved) as Chamado[];
+        return chamadosSalvos.map((chamado) => {
+          const urgencia = normalizarUrgencia(chamado.urgencia);
+          return {
+            ...chamado,
+            urgencia,
+            previsaoConclusao: calcularPrazoAtendimento(chamado.dataAbertura, urgencia),
+          };
+        });
       }
     } catch (e) {
       console.error('Falha ao recuperar do localStorage', e);
@@ -271,12 +280,14 @@ export const PatrimonialProvider: React.FC<{ children: ReactNode }> = ({ childre
     if (!original) throw new Error('Chamado não encontrado');
 
     const novoId = getNextId();
+    const dataAbertura = new Date().toISOString();
     const duplicado: Chamado = {
       ...original,
       id: novoId,
       titulo: `${original.titulo} (Cópia)`,
       status: 'Rascunho',
-      dataAbertura: new Date().toISOString(),
+      dataAbertura,
+      previsaoConclusao: calcularPrazoAtendimento(dataAbertura, original.urgencia),
       itens: original.itens.map((it) => ({ ...it, id: `item-${Date.now()}-${Math.random()}` })),
       roteiroAssinaturas: [
         {
