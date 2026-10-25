@@ -1,7 +1,7 @@
 export type Filial =
   | 'Matriz Recife - 19.457.137/0001-06'
   | 'Filial Paraíba - 19.457.137/0003-60'
-  | 'Filial Paraíba - 19.457.137/0002-89';
+  | 'Filial Natal - 19.457.137/0002-89';
 
 export type CentroDeCusto =
   | 'Patrimonio REC'

@@ -233,7 +233,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-418',
     titulo: 'Reparo Hidráulico Emergencial e Impermeabilização da Cozinha',
-    filial: 'Filial Paraíba - 19.457.137/0002-89',
+    filial: 'Filial Natal - 19.457.137/0002-89',
     centroDeCusto: 'Patrimonio RN',
     categoria: 'Manutenção Predial',
     urgencia: 'Crítica/Emergencial',
@@ -543,7 +543,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
   {
     id: 'ORC-421',
     titulo: 'Contratação de Laudo Estrutural e Termografia de Painéis Elétricos',
-    filial: 'Filial Paraíba - 19.457.137/0002-89',
+    filial: 'Filial Natal - 19.457.137/0002-89',
     centroDeCusto: 'Patrimonio RN',
     categoria: 'Serviços Terceirizados',
     urgencia: 'Média',
@@ -627,7 +627,7 @@ export const INITIAL_MOCK_CHAMADOS: Chamado[] = [
 export const FILIAIS_LIST = [
   'Matriz Recife - 19.457.137/0001-06',
   'Filial Paraíba - 19.457.137/0003-60',
-  'Filial Paraíba - 19.457.137/0002-89',
+  'Filial Natal - 19.457.137/0002-89',
 ] as const;
 
 export const CENTROS_DE_CUSTO_LIST = [
