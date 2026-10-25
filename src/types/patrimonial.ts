@@ -14,7 +14,8 @@ export type Categoria =
   | 'Compra de Suprimentos'
   | 'Ativos de TI & Hardware'
   | 'Serviços Terceirizados'
-  | 'Reformas & Adequações';
+  | 'Reformas & Adequações'
+  | 'Serviços Logísticos / Veículos';
 
 export type Urgencia =
   | 'Baixa - Até 7 dias'
@@ -74,6 +75,9 @@ export interface Chamado {
   filial: Filial;
   centroDeCusto: CentroDeCusto;
   categoria: Categoria;
+  placaVeiculo?: string;
+  tipoVeiculo?: string;
+  condutorVeiculo?: string;
   urgencia: Urgencia;
   status: StatusChamado;
   

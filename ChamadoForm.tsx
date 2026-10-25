@@ -56,6 +56,9 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
 
   // Form State
   const [titulo, setTitulo] = useState('');
+  const [placaVeiculo, setPlacaVeiculo] = useState('');
+  const [tipoVeiculo, setTipoVeiculo] = useState('');
+  const [condutorVeiculo, setCondutorVeiculo] = useState('');
   const [filial, setFilial] = useState<Filial>('Matriz Recife - 19.457.137/0001-06');
   const [centroDeCusto, setCentroDeCusto] = useState<CentroDeCusto>('Patrimonio REC');
   const [categoria, setCategoria] = useState<Categoria>('Manutenção de Equipamentos');
@@ -103,6 +106,9 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       setFilial(selectedChamado.filial);
       setCentroDeCusto(selectedChamado.centroDeCusto);
       setCategoria(selectedChamado.categoria);
+      setPlacaVeiculo(selectedChamado.placaVeiculo || '');
+      setTipoVeiculo(selectedChamado.tipoVeiculo || '');
+      setCondutorVeiculo(selectedChamado.condutorVeiculo || '');
       setUrgencia(selectedChamado.urgencia);
       setStatus(selectedChamado.status);
 
@@ -196,6 +202,12 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       errs.solicitanteNome = 'Informe o nome do solicitante';
     }
 
+    if (categoria === 'Serviços Logísticos / Veículos') {
+      if (!placaVeiculo.trim()) errs.placaVeiculo = 'Informe a placa do veículo';
+      if (!tipoVeiculo.trim()) errs.tipoVeiculo = 'Informe o tipo do veículo';
+      if (!condutorVeiculo.trim()) errs.condutorVeiculo = 'Informe o condutor do veículo';
+    }
+
     if (!justificativa.trim() || justificativa.trim().length < 15) {
       errs.justificativa = 'A justificativa deve ter no mínimo 15 caracteres explicativos';
     }
@@ -230,6 +242,12 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
       filial,
       centroDeCusto,
       categoria,
+      placaVeiculo:
+        categoria === 'Serviços Logísticos / Veículos' ? placaVeiculo.trim() : undefined,
+      tipoVeiculo:
+        categoria === 'Serviços Logísticos / Veículos' ? tipoVeiculo.trim() : undefined,
+      condutorVeiculo:
+        categoria === 'Serviços Logísticos / Veículos' ? condutorVeiculo.trim() : undefined,
       urgencia,
       status,
       solicitanteNome: solicitanteNome.trim(),
@@ -401,6 +419,65 @@ export const ChamadoForm: React.FC<ChamadoFormProps> = ({ isEditing = false }) =
                 </select>
               </div>
             </div>
+
+            {categoria === 'Serviços Logísticos / Veículos' && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Placa do Veículo <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={placaVeiculo}
+                    onChange={(e) => setPlacaVeiculo(e.target.value)}
+                    required
+                    aria-invalid={Boolean(errors.placaVeiculo)}
+                    className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                      errors.placaVeiculo ? 'border-rose-400' : 'border-slate-300'
+                    }`}
+                  />
+                  {errors.placaVeiculo && (
+                    <p className="text-xs text-rose-600 mt-1">{errors.placaVeiculo}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Tipo do Veículo <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={tipoVeiculo}
+                    onChange={(e) => setTipoVeiculo(e.target.value)}
+                    required
+                    aria-invalid={Boolean(errors.tipoVeiculo)}
+                    className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                      errors.tipoVeiculo ? 'border-rose-400' : 'border-slate-300'
+                    }`}
+                  />
+                  {errors.tipoVeiculo && (
+                    <p className="text-xs text-rose-600 mt-1">{errors.tipoVeiculo}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Condutor do Veículo <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={condutorVeiculo}
+                    onChange={(e) => setCondutorVeiculo(e.target.value)}
+                    required
+                    aria-invalid={Boolean(errors.condutorVeiculo)}
+                    className={`w-full px-3.5 py-2 text-sm bg-white border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${
+                      errors.condutorVeiculo ? 'border-rose-400' : 'border-slate-300'
+                    }`}
+                  />
+                  {errors.condutorVeiculo && (
+                    <p className="text-xs text-rose-600 mt-1">{errors.condutorVeiculo}</p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Solicitante & Datas */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">

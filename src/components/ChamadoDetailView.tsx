@@ -284,6 +284,44 @@ export const ChamadoDetailView: React.FC<ChamadoDetailViewProps> = ({ onOpenAppr
               </div>
             </div>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-xl bg-white border border-slate-200">
+            <div>
+              <span className="text-[11px] font-semibold text-slate-500 block uppercase">
+                Categoria da Requisição
+              </span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-800 mt-1 block">
+                {selectedChamado.categoria}
+              </span>
+            </div>
+            {selectedChamado.categoria === 'Serviços Logísticos / Veículos' && (
+              <>
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 block uppercase">
+                    Placa do Veículo
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold text-slate-800 mt-1 block">
+                    {selectedChamado.placaVeiculo}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 block uppercase">
+                    Tipo do Veículo
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold text-slate-800 mt-1 block">
+                    {selectedChamado.tipoVeiculo}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 block uppercase">
+                    Condutor do Veículo
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold text-slate-800 mt-1 block">
+                    {selectedChamado.condutorVeiculo}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
         </section>
 
         {/* ======================================================== */}

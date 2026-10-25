@@ -643,6 +643,7 @@ export const CATEGORIAS_LIST = [
   'Ativos de TI & Hardware',
   'Serviços Terceirizados',
   'Reformas & Adequações',
+  'Serviços Logísticos / Veículos',
 ] as const;
 
 export const URGENCIAS_LIST = [
